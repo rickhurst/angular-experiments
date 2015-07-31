@@ -110,10 +110,11 @@ routerApp.controller('formController', function($scope, $http){
         $http({
             method  : 'POST',
             url     : 'process.php',
-            data    : {
-                'name': $scope.formData.name,
-                'superheroAlias': $scope.formData.superheroAlias
-            },  // pass in data as strings
+            //data    : {
+            //     'name': $scope.formData.name,
+            //     'superheroAlias': $scope.formData.superheroAlias
+            // },  // pass in data individually
+            data    : $scope.formData, // pass in all form data
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
         })
         .success(function(data) {
