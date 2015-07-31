@@ -16,6 +16,12 @@ routerApp.config(function($stateProvider, $urlRouterProvider) {
             url: '/home',
             templateUrl: '/partial-home.html'
         })
+
+        .state('form', {
+            url: '/form',
+            templateUrl: '/partial-form.html',
+            controller: 'formController'
+        })
         
         // ABOUT PAGE AND MULTIPLE NAMED VIEWS =================================
         .state('about', {
@@ -88,5 +94,43 @@ routerApp.controller('scotchController', function($scope) {
 
 routerApp.controller('itemController', function($scope, items){
     $scope.items = items.data;
+});
+
+routerApp.controller('formController', function($scope, $http){
+    $scope.formData = {};
+
+    $scope.processForm = function() {
+
+        console.log($scope.formData.name);
+
+        // reset errors
+        $scope.errorName = false;
+        $scope.errorSuperhero = false;
+
+        $http({
+            method  : 'POST',
+            url     : 'process.php',
+            data    : {
+                'name': $scope.formData.name,
+                'superheroAlias': $scope.formData.superheroAlias
+            },  // pass in data as strings
+            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+        })
+        .success(function(data) {
+            console.log(data);
+
+            
+
+            if (!data.success) {
+                // if not successful, bind errors to error variables
+                $scope.errorName = data.errors.name;
+                $scope.errorSuperhero = data.errors.superheroAlias;
+            } else {
+                // if successful, bind success message to message
+                $scope.message = data.message;
+            }
+        });
+    };
+
 });
 
