@@ -44,9 +44,12 @@ routerApp.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: '/partial-table-data-test.html',
                     controller: 'itemController',
                     resolve: {
-                        items:  function($http){
-                            // $http returns a promise for the url data
-                            return $http({method: 'GET', url: '/items.php'});
+                        // items:  function($http){
+                        //     //$http returns a promise for the url data
+                        //    return $http({method: 'GET', url: '/items.php'});
+                        // }
+                        items: function(dataFactory){
+                            return dataFactory.getHttpStuff();
                         }
                     }
                 }
@@ -93,7 +96,9 @@ routerApp.controller('scotchController', function($scope) {
 });
 
 routerApp.controller('itemController', function($scope, items){
+    console.log(items);
     $scope.items = items.data;
+
 });
 
 routerApp.controller('formController', function($scope, $http){
@@ -134,4 +139,28 @@ routerApp.controller('formController', function($scope, $http){
     };
 
 });
+
+
+routerApp.factory('dataFactory', function($http){
+
+    var dataFactory = {};
+
+    dataFactory.getStuff = function () {
+        //return $http({method: 'GET', url: '/items.php'});
+        return {
+            'data': [{
+                'foo':'a',
+                'bar':'b'
+            }]
+        };
+    };
+
+    dataFactory.getHttpStuff = function () {
+        return $http({method: 'GET', url: '/items.php'});
+    };
+
+    return dataFactory;
+});
+
+
 
